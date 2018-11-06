@@ -9,6 +9,7 @@ import lombok.Data;
 
 @Data
 public class Taco{
+    //与design.html中的名字为name的input对应，并对其进行输入限制
     @NotNull
     @Size(min=5, message="Name must be at least 5 characters long")
     private String name;

@@ -4,9 +4,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.extern.slf4j.Slf4j;
@@ -37,9 +42,21 @@ public class DesignTacoController {
             model.addAttribute(t.toString().toLowerCase(), filterByType(ingredients, t));
         }
 
+        //与design.html中form的th:object=${desgin}绑定
         model.addAttribute("design", new Taco());
         return "design";
     }
+
+    @PostMapping
+    public String processDesign(@Valid @ModelAttribute("design") Taco design, Errors error){
+        if (error.hasErrors()) {
+            return "design";
+        }
+        log.info("Processing begin:" + design);
+
+        return "redirect:/orders/current";
+    }
+
     private List<Ingredient> filterByType(List<Ingredient> ingredients, Ingredient.Type type) {
     return ingredients
               .stream()
